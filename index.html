@@ -1,23 +1,124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나의 MyHome</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; background-color: #f4f4f9; padding: 50px; }
-        h1 { color: #333; }
-        p { color: #666; }
-        .container { background-color: #fff; padding: 30px; border-radius: 10px; display: inline-block; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple Memo</title>
+
+<style>
+  body {
+    margin:0;
+    font-family: system-ui, sans-serif;
+    display:flex;
+    height:100vh;
+  }
+  aside {
+    width:240px;
+    border-right:1px solid #eee;
+    padding:12px;
+    overflow-y:auto;
+  }
+  main {
+    flex:1;
+    padding:12px;
+    display:flex;
+    flex-direction:column;
+  }
+  button {
+    padding:8px 12px;
+    border:1px solid #222;
+    background:#fff;
+    border-radius:10px;
+    cursor:pointer;
+  }
+  button:hover {
+    background:#222;
+    color:#fff;
+  }
+  .memo-item {
+    padding:8px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:6px;
+    border:1px solid #eee;
+  }
+  .memo-item.active {
+    background:#222;
+    color:#fff;
+  }
+  textarea {
+    flex:1;
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:12px;
+    font-size:15px;
+    resize:none;
+  }
+</style>
 </head>
+
 <body>
 
-    <div class="container">
-        <h1>환영합니다!</h1>
-        <p>이곳은 저의 아주 간단한 홈페이지입니다.</p>
-        <p>HTML과 CSS를 이용해 만들었어요.</p>
-    </div>
+<aside>
+  <button onclick="newMemo()">+ 새 메모</button>
+  <div id="list"></div>
+</aside>
+
+<main>
+  <textarea id="editor" placeholder="메모를 입력하세요..." oninput="saveMemo()"></textarea>
+</main>
+
+<script>
+let memos = JSON.parse(localStorage.getItem("memos") || "[]");
+let current = null;
+
+function render() {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  memos.forEach((m, i) => {
+    const div = document.createElement("div");
+    div.className = "memo-item" + (i === current ? " active" : "");
+    div.textContent = m.text.split("\n")[0] || "빈 메모";
+    div.onclick = () => openMemo(i);
+    list.appendChild(div);
+  });
+}
+
+function newMemo() {
+  memos.unshift({ text: "" });
+  current = 0;
+  document.getElementById("editor").value = "";
+  saveAll();
+  render();
+}
+
+function openMemo(i) {
+  current = i;
+  document.getElementById("editor").value = memos[i].text;
+  render();
+}
+
+function saveMemo() {
+  if (current === null) return;
+  memos[current].text = document.getElementById("editor").value;
+  saveAll();
+  render();
+}
+
+function saveAll() {
+  localStorage.setItem("memos", JSON.stringify(memos));
+}
+
+if (memos.length === 0) newMemo();
+else {
+  current = 0;
+  document.getElementById("editor").value = memos[0].text;
+}
+
+render();
+</script>
 
 </body>
 </html>
