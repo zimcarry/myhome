@@ -1,124 +1,50 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Simple Memo</title>
-
-<style>
-  body {
-    margin:0;
-    font-family: system-ui, sans-serif;
-    display:flex;
-    height:100vh;
-  }
-  aside {
-    width:240px;
-    border-right:1px solid #eee;
-    padding:12px;
-    overflow-y:auto;
-  }
-  main {
-    flex:1;
-    padding:12px;
-    display:flex;
-    flex-direction:column;
-  }
-  button {
-    padding:8px 12px;
-    border:1px solid #222;
-    background:#fff;
-    border-radius:10px;
-    cursor:pointer;
-  }
-  button:hover {
-    background:#222;
-    color:#fff;
-  }
-  .memo-item {
-    padding:8px;
-    border-radius:8px;
-    cursor:pointer;
-    margin-top:6px;
-    border:1px solid #eee;
-  }
-  .memo-item.active {
-    background:#222;
-    color:#fff;
-  }
-  textarea {
-    flex:1;
-    width:100%;
-    border:1px solid #ddd;
-    border-radius:12px;
-    padding:12px;
-    font-size:15px;
-    resize:none;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 마이홈</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background-color: #f4f9f9;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background-color: white;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2b7a78;
+        }
+        p {
+            color: #3aafa9;
+            line-height: 1.6;
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
 </head>
-
 <body>
 
-<aside>
-  <button onclick="newMemo()">+ 새 메모</button>
-  <div id="list"></div>
-</aside>
-
-<main>
-  <textarea id="editor" placeholder="메모를 입력하세요..." oninput="saveMemo()"></textarea>
-</main>
-
-<script>
-let memos = JSON.parse(localStorage.getItem("memos") || "[]");
-let current = null;
-
-function render() {
-  const list = document.getElementById("list");
-  list.innerHTML = "";
-
-  memos.forEach((m, i) => {
-    const div = document.createElement("div");
-    div.className = "memo-item" + (i === current ? " active" : "");
-    div.textContent = m.text.split("\n")[0] || "빈 메모";
-    div.onclick = () => openMemo(i);
-    list.appendChild(div);
-  });
-}
-
-function newMemo() {
-  memos.unshift({ text: "" });
-  current = 0;
-  document.getElementById("editor").value = "";
-  saveAll();
-  render();
-}
-
-function openMemo(i) {
-  current = i;
-  document.getElementById("editor").value = memos[i].text;
-  render();
-}
-
-function saveMemo() {
-  if (current === null) return;
-  memos[current].text = document.getElementById("editor").value;
-  saveAll();
-  render();
-}
-
-function saveAll() {
-  localStorage.setItem("memos", JSON.stringify(memos));
-}
-
-if (memos.length === 0) newMemo();
-else {
-  current = 0;
-  document.getElementById("editor").value = memos[0].text;
-}
-
-render();
-</script>
+    <div class="container">
+        <!-- 프로필 사진 (원하는 이미지 주소로 변경하세요) -->
+        <img src="https://placeholder.com" alt="프로필 사진" class="profile-img">
+        
+        <h1>환영합니다! 제 마이홈에 오신 것을 환영해요</h1>
+        
+        <p>안녕하세요! 이곳은 저의 취향과 일상을 기록하는 아늑한 공간입니다.</p>
+        <p>앞으로 이곳에 다양한 이야기들을 채워나갈 예정이니 자주 놀러와 주세요!</p>
+    </div>
 
 </body>
 </html>
